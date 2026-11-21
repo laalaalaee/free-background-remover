@@ -35,6 +35,29 @@ Or with Docker (serves the production build with nginx):
 docker compose up --build   # http://localhost:8080
 ```
 
+## Deploy
+
+The app is a static site, so it needs no Node.js server in production.
+
+```bash
+npm run build      # outputs the static site to dist/
+```
+
+Upload the contents of `dist/` to any static host (Hostinger, Netlify, Cloudflare Pages, GitHub Pages, nginx). Two things to get right:
+
+- **Cross-origin isolation headers.** The model runs multi-threaded through `SharedArrayBuffer`, which browsers only allow when the page is served with `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp`. The bundled [`nginx.conf`](nginx.conf) already sets them. On Apache/LiteSpeed hosting (for example Hostinger shared hosting), add this to `.htaccess`:
+
+  ```apache
+  <IfModule mod_headers.c>
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Embedder-Policy "require-corp"
+  </IfModule>
+  ```
+
+- **SPA fallback.** Route unknown paths to `index.html` (already handled in `nginx.conf`).
+
+Looking for a host? [Hostinger](https://www.hostinger.com/in/cart?product=hosting%3Aunlimited&period=12&referral_type=cart_link&REFERRALCODE=ZYZZ20&referral_id=01a1fe0a-509b-7131-852e-ee60709de569) works for this (referral link, I may earn a commission). Its Node.js Web Apps plans can also deploy straight from GitHub, though they are not needed for a static build.
+
 ## How it works
 
 1. The image is validated in the browser (magic bytes, dimensions).
