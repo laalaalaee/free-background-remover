@@ -21,8 +21,8 @@ Your image is processed on your own device with [`@imgly/background-removal`](ht
 ## Run it
 
 ```bash
-git clone https://github.com/laalaalaee/removal-studio
-cd removal-studio
+git clone https://github.com/laalaalaee/free-background-remover
+cd free-background-remover
 npm install
 npm run dev        # http://localhost:3000
 ```
